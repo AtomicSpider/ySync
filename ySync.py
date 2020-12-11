@@ -40,8 +40,8 @@ def init():
         conn = sqlite3.connect(str(_db_path))
         c = conn.cursor()
         c.execute(
-            '''CREATE TABLE IF NOT EXISTS playlists(uuid TEXT PRIMARY KEY NOT NULL, alias TEXT NOT NULL, url TEXT NOT NULL, res INT NOT NULL, Timestamp created_at DEFAULT CURRENT_TIMESTAMP)''')
-        c.execute('''CREATE TABLE IF NOT EXISTS videos(uuid TEXT PRIMARY KEY NOT NULL, pl_alias TEXT NOT NULL, res INT NOT NULL, status INTEGER NOT NULL DEFAULT 0, Timestamp created_at DEFAULT CURRENT_TIMESTAMP)''')
+            '''CREATE TABLE IF NOT EXISTS playlists(uuid TEXT PRIMARY KEY NOT NULL, alias TEXT NOT NULL, url TEXT NOT NULL, res INT NOT NULL, created_at Timestamp DEFAULT CURRENT_TIMESTAMP)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS videos(uuid TEXT PRIMARY KEY NOT NULL, pl_alias TEXT NOT NULL, res INT NOT NULL, status INTEGER NOT NULL DEFAULT 0, created_at Timestamp DEFAULT CURRENT_TIMESTAMP)''')
         conn.commit()
     except Error as e:
         raise Exception(e)
@@ -175,7 +175,7 @@ def sync_playlists():
         conn.commit()
 
         c.execute("SELECT uuid, pl_alias, res FROM videos where status=0")
-        down_vids = c.fetchall()[:5]
+        down_vids = c.fetchall()
 
         _num_vids = len(down_vids)
         print('\n_> Downloading {} videos ...'.format(_num_vids))
@@ -191,7 +191,7 @@ def sync_playlists():
                         raise Exception('Private Video')
                 except Exception as e:
                     logging.error(e)
-                    print('_> [ERROR]: Could not parse video with ID: {}'.format(
+                    print('_> [ERROR]: Could not parse video with ID: {}. Video is private or not available.'.format(
                         down_vid[0]))
                     c.execute(
                         "UPDATE videos SET status=2 WHERE uuid='{}'".format(down_vid[0]))
@@ -280,7 +280,7 @@ if __name__ == '__main__':
         if args.task == 'main':
             show_main()
         else:
-            pass
+            sync_playlists()
     except Exception as e:
         print('[ERROR]: {}, See app.log for details'.format(e))
         logging.error(traceback.format_exc())

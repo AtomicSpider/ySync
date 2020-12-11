@@ -1,0 +1,5 @@
+pathlib==1.0.1
+db-sqlite3==0.0.1
+pytube==10.1.0
+pandas==0.25.3
+tqdm==4.43.0

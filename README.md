@@ -23,6 +23,7 @@ or
 python3 ySync.py
 ```
 **B) Registering & Downloading playlists:**
+Every time the download option is selected, the application also queries for newly added videos in the registered playlists and adds them to the download queue.
 ![enter image description here](https://s8.gifyu.com/images/ezgif.com-gif-maker-3ebf379f634a0bcb8.gif)
 
 Press **Ctrl+C** during download to exit. On the next sync, the application will automatically pick up the download queue.
